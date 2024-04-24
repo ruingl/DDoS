@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="https://github.com/images/mona-whisper.gif" alt="DDoS Logo" width="100" height="100">
   <h1>DDoS</h1>
 </div>
 

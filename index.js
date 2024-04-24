@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import axios from 'axios';
 import utils from './src/utils.js';
+import rl from 'readline-sync';
 const cwd = process.cwd();
 
 (async () => {
@@ -15,6 +16,9 @@ const cwd = process.cwd();
 
   console.log('[+]: Fetching site..');
   utils.sleep(1500);
+
+  let numBots = rl.questionInt('Enter the number of bots (1-10): ');
+  numBots = Math.min(numBots, 10);
 
   try {
     const response = await axios.get(site);
@@ -38,7 +42,10 @@ const cwd = process.cwd();
         }
       };
 
-      setInterval(ping, pingInterval);
+      for (let i = 0; i < numBots; i++) {
+        setInterval(ping, pingInterval);
+      }
+      
       setInterval(utils.checkSite, checkInterval);
     }
   } catch (error) {

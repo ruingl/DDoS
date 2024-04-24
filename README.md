@@ -15,4 +15,6 @@ ___This tool is provided for educational and testing purposes only. The user is 
 
 **Note:** ___It is strictly advised not to use this tool to launch attacks against government websites or any other unauthorized targets.___
 
-##### Made with 🤍 by Rui
+<div align="center">
+  <h5>Made with 🤍 by Rui</h5>
+</div>

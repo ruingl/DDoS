@@ -12,6 +12,8 @@ const checkSite = async () => {
     if (!response) {
       sleep(200);
       console.log('[-]: Site is down.');
+      sleep(1500);
+      process.exit();
     } else {
       sleep(200);
       console.log('[+]: Site up!, starting attack process.');

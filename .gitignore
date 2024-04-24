@@ -1,0 +1,5 @@
+.upm/
+.local/
+.replit
+replit.nix
+node_modules/

@@ -1,0 +1,17 @@
+{
+  "name": "DDoS",
+  "version": "1.0.0",
+  "description": "DDoS",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Rui",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "fs-extra": "^11.2.0"
+  }
+}

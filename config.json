@@ -1,5 +1,6 @@
 {
   "pingInterval": "0",
+  "numBots": "100",
   "checkInterval": "5000",
   "siteConfig": {
     "site": "https://example.com",

